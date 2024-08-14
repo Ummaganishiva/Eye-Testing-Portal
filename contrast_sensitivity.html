@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contrast Sensitivity Test</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .test-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+        }
+        .test-image {
+            border: 2px solid #000;
+            margin: 0 10px;
+            display: inline-block;
+            max-width: 100%;
+            height: auto;
+            transition: transform 0.3s ease;
+        }
+        .test-image:hover {
+            transform: scale(1.05);
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Contrast Sensitivity Test</h1>
+        <p>Identify the pattern in each image as the contrast decreases. Click "Next Pattern" if you can see it clearly or "Submit" if you can't.</p>
+        <div class="test-container">
+            <img id="testImage" src="images/stripe1.png" class="test-image" alt="Pattern">
+        </div>
+        <div class="button-container">
+            <button class="btn" onclick="nextPattern()">Next Pattern</button>
+            <button class="btn" onclick="submitTest()">Submit</button>
+        </div>
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        let currentPattern = 0;
+        const patterns = [
+            'images/stripe1.png',
+            'images/stripe2.png',
+            'images/stripe3.jpeg',
+            'images/stripe4.jpg',
+            'images/stripe5.jpeg'
+        ];
+        let score = 0;
+        const maxPatterns = patterns.length;
+
+        function nextPattern() {
+            if (currentPattern >= patterns.length - 1) {
+                document.getElementById('message').textContent = 'You have reached the last pattern. Click Submit to finish the test.';
+                return;
+            }
+            currentPattern++;
+            document.getElementById('testImage').src = patterns[currentPattern];
+        }
+
+        function submitTest() {
+            const message = document.getElementById('message');
+            score = currentPattern + 1; // Score is the number of patterns viewed
+
+            let feedback;
+            if (score === maxPatterns) {
+                feedback = 'Your contrast sensitivity is within the normal range. If you have any vision issues, consult an eye specialist.';
+            } else if (score >= Math.floor(maxPatterns / 2)) {
+                feedback = 'Your contrast sensitivity is slightly below average. Consider consulting an eye specialist if you experience difficulties.';
+            } else {
+                feedback = 'Your contrast sensitivity is significantly below average. It is highly recommended to consult an eye specialist.';
+            }
+
+            message.innerHTML = `
+                <p>Thank you for taking the test!</p>
+                <p>Your score: ${score}/${maxPatterns}</p>
+                <p>${feedback}</p>
+                <a href="php/dashboard.php" class="btn">Back to Dashboard</a>
+            `;
+            // Disable buttons after submission
+            document.querySelector('.button-container').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Eye Testing Portal</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #333;
+            color: White;
+            padding: 15px 20px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            margin: 0;
+            text-align: center;
+            font-size: 3.5em;
+            flex: 1;
+            color: white;
+        }
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        .auth-buttons a {
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            background: #007bff;
+            font-size: 1em;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .auth-buttons a:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+        .hero {
+            background: url('images/head11.jpg') no-repeat center center/cover;
+            color: Black;
+            text-align: center;
+            padding: 80px 20px;
+            margin-top: 60px; /* Adjust based on header height */
+        }
+        .hero h2 {
+            margin: 0 0 10px;
+            font-size: 2.5em;
+        }
+        .hero p {
+            font-size: 1.2em;
+            margin: 0 0 20px;
+        }
+        .hero .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            font-size: 1.5em;
+            color: white;
+            background-color: #007bff;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .hero .btn:hover {
+            background-color: #0056b3;
+        }
+        .features, .how-it-works, .testimonials {
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .features h3, .how-it-works h3, .testimonials h3 {
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+        .feature-item, .testimonials blockquote {
+            margin: 20px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .testimonials blockquote:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+        .testimonials blockquote {
+            padding: 20px;
+            margin: 10px;
+            display: inline-block;
+            width: calc(33.333% - 40px);
+            vertical-align: top;
+            text-align: left;
+        }
+        .testimonials footer {
+            margin-top: 10px;
+            font-style: italic;
+        }
+        .testimonials img {
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+        footer .social-media a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        footer .social-media a:hover {
+            text-decoration: underline;
+        }
+        .typing-effect {
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: .15em solid orange;
+            animation: typing 3.5s steps(30, end), blink-caret .75s step-end infinite;
+        }
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 40% }
+        }
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: orange }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Online Eye Testing Portal</h1>
+        <div class="auth-buttons">
+            <a href="signup.html" class="btn">Sign Up</a>
+            <a href="login.html" class="btn">Log In</a>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h2 class="typing-effect">Welcome to Your Vision Health</h2>
+            <p>Discover how our online eye tests can help you maintain healthy eyesight.</p>
+            <a href="login.html" class="btn">Start Eye Test</a>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <h3>Our Key Features</h3>
+            <div class="feature-item">
+                <h4>Interactive Eye Tests</h4>
+                <p>Take various eye tests from the comfort of your home.</p>
+            </div>
+            <div class="feature-item">
+                <h4>Detailed Results</h4>
+                <p>Get comprehensive results and track your vision over time.</p>
+            </div>
+            <div class="feature-item">
+                <h4>Expert Advice</h4>
+                <p>Receive tips and recommendations from eye health professionals.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-it-works">
+        <div class="container">
+            <h3>How It Works</h3>
+            <p>1. Sign up and log in.</p>
+            <p>2. Take our interactive eye tests.</p>
+            <p>3. Review your results and get expert advice.</p>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <div class="container">
+            <h3>What Our Users Say</h3>
+            <blockquote>
+                <img src="images/index1.jpg" alt="User 1">
+                <p>"A fantastic tool for keeping track of my eye health!"</p>
+                <footer>- Jane Doe</footer>
+            </blockquote>
+            <blockquote>
+                <img src="images/index3.jpg" alt="User 2">
+                <p>"The tests are easy to take and very informative."</p>
+                <footer>- John Smith</footer>
+            </blockquote>
+            <blockquote>
+                <img src="images/index2.jpg" alt="User 3">
+                <p>"I appreciate the detailed results and the professional advice."</p>
+                <footer>- Emily Johnson</footer>
+            </blockquote>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Online Eye Testing Portal. All rights reserved.</p>
+            <div class="social-media">
+                <a href="#">Facebook</a> | <a href="#">Twitter</a> | <a href="#">Instagram</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

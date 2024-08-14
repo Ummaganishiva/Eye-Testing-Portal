@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Acuity Test</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 1rem;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .word {
+            font-size: 5rem; /* Initial font size */
+            margin: 2rem 0;
+            transition: font-size 0.5s ease;
+        }
+
+        .form-group {
+            margin-top: 1rem;
+        }
+
+        .form-group input[type="text"] {
+            padding: 0.5rem;
+            font-size: 1rem;
+            width: calc(100% - 2rem); /* Adjusted width */
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-bottom: 1rem;
+            /* Disable browser suggestions */
+            autocomplete: off;
+        }
+
+        .form-group button, #cant-see-btn {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            border: none;
+            color: #fff;
+            background-color: #333;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-group button:hover, #cant-see-btn:hover {
+            background-color: #555;
+        }
+
+        .results {
+            margin-top: 2rem;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 2rem;
+            color: #333;
+            text-decoration: none;
+            border: 1px solid #333;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-link:hover {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Visual Acuity Test</h1>
+    </header>
+    <div class="container">
+        <div id="test-area">
+            <div id="word-display" class="word">Loading...</div>
+            <div class="form-group">
+                <input type="text" id="user-input" placeholder="Enter the word you see" onpaste="return false;" oncopy="return false;" oncut="return false;">
+                <button id="submit-btn">Submit</button>
+            </div>
+            <button id="cant-see-btn">I Can't See</button>
+        </div>
+        <div id="results" class="results" style="display: none;">
+            <h2>Results</h2>
+            <p id="score"></p>
+            <p id="feedback"></p>
+        </div>
+        <a href="php/dashboard.php" class="back-link">Back to Dashboard</a>
+    </div>
+    <script>
+        const words = [
+            'ANCIOS', 'BVNTSRF', 'CCDVGFT', 'BVNAQPLXNZM', 'ELDERBERRY',
+            'FIGBVNYSR', 'GNCBTSUK', 'HONEYDEW', 'KIDSQBXCRS', 'LEBVNUI'
+        ];
+        let currentIndex = 0;
+        let score = 0;
+        const maxAttempts = words.length;
+
+        function showWord() {
+            if (currentIndex >= maxAttempts) {
+                showResults();
+                return;
+            }
+
+            const wordElement = document.getElementById('word-display');
+            // Use floating-point values for font size
+            const fontSize = Math.max(0.3, 2 - (currentIndex * 0.3)); // Min font size of 0.5rem
+            wordElement.style.fontSize = `${fontSize}rem`;
+            wordElement.textContent = words[currentIndex];
+        }
+
+        function showResults() {
+            document.getElementById('test-area').style.display = 'none';
+            document.getElementById('results').style.display = 'block';
+
+            const scoreElement = document.getElementById('score');
+            const feedbackElement = document.getElementById('feedback');
+
+            scoreElement.textContent = `Your Score: ${score}/${maxAttempts}`;
+
+            if (score === maxAttempts) {
+                feedbackElement.textContent = 'Excellent! Your vision is great!';
+            } else if (score >= maxAttempts / 2) {
+                feedbackElement.textContent = 'Good job! Your vision is above average.';
+            } else {
+                feedbackElement.textContent = 'Needs Improvement. Consider an eye check-up.';
+            }
+        }
+
+        function handleWrongInput() {
+            if (confirm("You have entered the wrong word. Do you want to quit or rewrite the word?")) {
+                // User chooses to rewrite the word
+                showWord();
+                
+            } else {
+                // User chooses to quit
+                showResults();
+            }
+        }
+
+        document.getElementById('submit-btn').addEventListener('click', () => {
+            const userInput = document.getElementById('user-input').value.toUpperCase();
+            if (userInput === words[currentIndex]) {
+                score++;
+                currentIndex++;
+                document.getElementById('user-input').value = ''; // Clear the input field
+                showWord();
+            } else {
+                handleWrongInput();
+            }
+        });
+
+        document.getElementById('cant-see-btn').addEventListener('click', () => {
+            showResults();
+        });
+
+        // Initialize the test
+        showWord();
+    </script>
+</body>
+</html>

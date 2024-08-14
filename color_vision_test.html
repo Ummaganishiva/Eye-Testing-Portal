@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Vision Test</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 1rem;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-container {
+            margin: 2rem 0;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-top: 1rem;
+        }
+
+        .form-group input[type="text"] {
+            padding: 0.5rem;
+            font-size: 1rem;
+            width: calc(100% - 2rem); /* Adjusted width */
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-bottom: 1rem;
+        }
+
+        .form-group button {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            border: none;
+            color: #fff;
+            background-color: #333;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-group button:hover {
+            background-color: #555;
+        }
+
+        .results {
+            margin-top: 2rem;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 2rem;
+            color: #333;
+            text-decoration: none;
+            border: 1px solid #333;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-link:hover {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Color Vision Test</h1>
+    </header>
+    <div class="container">
+        <div id="test-area">
+            <div id="image-container" class="image-container">
+                <img id="color-image" src="images/pic1.jpg" alt="Color Vision Test">
+            </div>
+            <div class="form-group">
+                <input type="text" id="user-input" placeholder="Enter the number you see">
+                <button id="submit-btn">Submit</button>
+            </div>
+        </div>
+        <div id="results" class="results" style="display: none;">
+            <h2>Results</h2>
+            <p id="score"></p>
+            <p id="feedback"></p>
+            <button id="retry-btn">Retry Test</button>
+            <a href="php/dashboard.php" class="back-link">Back to Dashboard</a>
+        </div>
+    </div>
+    <script>
+        const images = [
+            { src: 'images/color1.png', answer: '12' },
+            { src: 'images/color2.png', answer: '8' },
+            { src: 'images/color3.png', answer: '29' },
+            { src: 'images/color4.png', answer: '5' },
+            { src: 'images/color5.png', answer: '3' },
+            { src: 'images/color6.png', answer: '74' },
+            { src: 'images/color7.png', answer: '2' },
+            { src: 'images/color8.png', answer: '42' }
+            // Add more images and answers here
+        ];
+        let currentIndex = 0;
+        let score = 0;
+
+        function showImage() {
+            if (currentIndex >= images.length) {
+                showResults();
+                return;
+            }
+
+            const imageElement = document.getElementById('color-image');
+            imageElement.src = images[currentIndex].src;
+        }
+
+        function showResults() {
+            document.getElementById('test-area').style.display = 'none';
+            document.getElementById('results').style.display = 'block';
+
+            const scoreElement = document.getElementById('score');
+            const feedbackElement = document.getElementById('feedback');
+            const retryBtn = document.getElementById('retry-btn');
+
+            scoreElement.textContent = `Your Score: ${score}/${images.length}`;
+
+            if (score === images.length) {
+                feedbackElement.textContent = 'Excellent color vision!';
+            } else if (score >= images.length / 2) {
+                feedbackElement.textContent = 'Good color vision!';
+            } else {
+                feedbackElement.textContent = 'Consider a color vision check-up.';
+            }
+
+            retryBtn.addEventListener('click', () => {
+                currentIndex = 0;
+                score = 0;
+                document.getElementById('test-area').style.display = 'block';
+                document.getElementById('results').style.display = 'none';
+                showImage();
+            });
+        }
+
+        document.getElementById('submit-btn').addEventListener('click', () => {
+            const userInput = document.getElementById('user-input').value.toUpperCase();
+            if (userInput === images[currentIndex].answer) {
+                score++;
+                currentIndex++;
+                showImage();
+            } else {
+                if (confirm("You have entered the wrong word. Do you want to quit or retry?")) {
+                    showResults();
+                } else {
+                    document.getElementById('user-input').value = '';
+                }
+            }
+        });
+
+        // Initialize the test
+        showImage();
+    </script>
+</body>
+</html>

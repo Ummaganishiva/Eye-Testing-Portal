@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grid Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 {
+            color: #333;
+        }
+        #grid-container {
+            display: grid;
+            grid-template-columns: repeat(15, 20px); /* 15 columns of 20px each */
+            grid-gap: 2px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .cell {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ddd;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .cell:hover {
+            background-color: #ccc;
+            transform: scale(1.1);
+        }
+        #timer {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        #score {
+            font-size: 24px;
+            margin: 20px 0;
+            color: #333;
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            background-color: #007bff;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        #back-button {
+            background-color: #28a745;
+        }
+        #back-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <h1>Grid Test</h1>
+    <div id="timer">Time left: <span id="time">10</span> seconds</div>
+    <div id="grid-container"></div>
+    <div id="score"></div>
+    <button id="next-button" style="display: none;">Next Grid</button>
+    <button id="back-button" style="display: none;" onclick="window.location.href='php/dashboard.php';">Back to Dashboard</button>
+    <button id="retry-button" style="display: none;">Retry</button>
+    <button id="quit-button" style="display: none;">Quit</button>
+
+    <script>
+        const numberOfGrids = 5;
+        const cellsPerGrid = 225; // 15x15 grid
+        let currentGrid = 0;
+        let uniqueElement = '';
+        let correctAnswer = false;
+        let timerInterval;
+
+        // Static elements for grids
+        const commonElements = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+        const uniqueElements = ['X', 'Y', 'Z', 'W', 'V'];
+
+        const grids = generateGrids(numberOfGrids, cellsPerGrid);
+
+        function generateGrids(numGrids, cellsPerGrid) {
+            const grids = [];
+            for (let i = 0; i < numGrids; i++) {
+                const commonElement = commonElements[i % commonElements.length];
+                const uniqueElement = uniqueElements[i % uniqueElements.length];
+                const cells = [];
+                let uniquePosition = Math.floor(Math.random() * cellsPerGrid);
+
+                // Ensure there is at least one unique element and rest are common
+                for (let j = 0; j < cellsPerGrid; j++) {
+                    cells[j] = j === uniquePosition ? uniqueElement : commonElement;
+                }
+
+                // Shuffle cells to randomize unique element position
+                for (let j = cells.length - 1; j > 0; j--) {
+                    const k = Math.floor(Math.random() * (j + 1));
+                    [cells[j], cells[k]] = [cells[k], cells[j]];
+                }
+
+                grids.push({ commonElement, uniqueElement, cells });
+            }
+            return grids;
+        }
+
+        function renderGrid(grid) {
+            const container = document.getElementById('grid-container');
+            container.innerHTML = '';
+            grid.cells.forEach((item) => {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.innerText = item;
+                cell.onclick = () => {
+                    if (item === grid.uniqueElement) {
+                        correctAnswer = true;
+                        clearInterval(timerInterval);
+                        showScore('Correct! Moving to the next grid.');
+                    } else {
+                        correctAnswer = false;
+                        clearInterval(timerInterval);
+                        showScore('Incorrect. Do you want to quit or retry?');
+                    }
+                };
+                container.appendChild(cell);
+            });
+        }
+
+        function showScore(message) {
+            document.getElementById('score').innerHTML = `<strong>${message}</strong>`;
+            document.getElementById('next-button').style.display = correctAnswer ? 'block' : 'none';
+            document.getElementById('retry-button').style.display = !correctAnswer ? 'block' : 'none';
+            document.getElementById('quit-button').style.display = !correctAnswer ? 'block' : 'none';
+        }
+
+        function startGrid() {
+            correctAnswer = false;
+            document.getElementById('score').innerHTML = '';
+            document.getElementById('next-button').style.display = 'none';
+            document.getElementById('retry-button').style.display = 'none';
+            document.getElementById('quit-button').style.display = 'none';
+            document.getElementById('back-button').style.display = 'none';
+
+            const grid = grids[currentGrid];
+            uniqueElement = grid.uniqueElement;
+            renderGrid(grid);
+
+            let timeLeft = 5; // seconds
+            document.getElementById('time').innerText = timeLeft;
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('time').innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    showScore('Time is up! Do you want to quit or retry?');
+                }
+            }, 1000);
+        }
+
+        document.getElementById('retry-button').onclick = () => {
+            startGrid();
+        };
+
+        document.getElementById('quit-button').onclick = () => {
+            document.getElementById('score').innerHTML = '<strong>Thank you for participating. Please consult a specialist if you have concerns about your vision.</strong>';
+            document.getElementById('next-button').style.display = 'none';
+            document.getElementById('retry-button').style.display = 'none';
+            document.getElementById('quit-button').style.display = 'none';
+            document.getElementById('back-button').style.display = 'block';
+        };
+
+        document.getElementById('next-button').onclick = () => {
+            if (currentGrid + 1 < numberOfGrids) {
+                currentGrid++;
+                startGrid();
+            } else {
+                document.getElementById('back-button').style.display = 'block';
+                document.getElementById('next-button').style.display = 'none';
+            }
+        };
+
+        // Start the first grid when the page loads
+        window.onload = startGrid;
+    </script>
+</body>
+</html>
